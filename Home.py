@@ -1,18 +1,17 @@
 import streamlit as st
 
+##################################################
 # Config default settings of the page.
+##################################################
 st.set_page_config(
     page_title="2025 Crossfit Games Open",
     layout="wide",
     page_icon="💪",
 )
 
-# st.sidebar.success("Home")
-
-st.markdown(" Alex lasnier - [LinkedIn](https://www.linkedin.com/in/alex-lasnier)")
-
-
+##################################################
 # App
+##################################################
 st.title("Welcome to the 2025 CrossFit Games Open")
 st.markdown("Alex Lasnier - [LinkedIn](https://www.linkedin.com/in/alex-lasnier)")
 st.header("3 WEEKS - 3 WORKOUTS")
