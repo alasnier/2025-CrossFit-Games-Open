@@ -28,7 +28,7 @@ def login():
             email = st.text_input("Email")
             sex = st.radio("Sex", ["Male", "Female"])
             birth_year = st.number_input(
-                "Year of Birth", min_value=1900, max_value=datetime.now().year
+                "Year of Birth", min_value=1975, max_value=datetime.now().year
             )
             level = st.radio("Workout Level", ["Scaled", "RX'd"])
 
