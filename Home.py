@@ -20,7 +20,8 @@ st.markdown(
 )
 
 st.subheader("No matter what level you are.")
-st.subheader("There is a version of a workout for you. Rx or Scaled")
+st.subheader("""There is a version of a workout for you.
+Rx or Scaled""")
 
 left_co, cent_co, last_co = st.columns(3)
 with cent_co:
