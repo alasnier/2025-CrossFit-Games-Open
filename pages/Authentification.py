@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -7,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 ##################################################
 # PostgreSQL connection URL
 ##################################################
-DB_URL = "postgresql+psycopg2://postgres:admin@localhost:5432/crossfit_open_2025"
+DB_URL = os.getenv("DATABASE_URL")
 
 # Set up the database engine and session
 engine = create_engine(DB_URL)
@@ -162,7 +163,7 @@ login()
 
 def change_password():
     """Permet à l'utilisateur de changer son mot de passe."""
-    st.subheader("Change Password if you want")
+    st.subheader("Change Password if you want:")
 
     session = Session()
     user = (
