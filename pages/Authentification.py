@@ -163,7 +163,7 @@ login()
 
 def change_password():
     """Permet à l'utilisateur de changer son mot de passe."""
-    st.subheader("Change Password if you want")
+    st.subheader("Change Password if you want:")
 
     session = Session()
     user = (
