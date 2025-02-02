@@ -1,8 +1,16 @@
 import streamlit as st
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    TIMESTAMP,
+    func,
+)
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ##################################################
@@ -31,6 +39,19 @@ class User(Base):
     level = Column(String(10), nullable=False)
     category = Column(String(20), nullable=False)
     age = Column(Integer, nullable=False)
+    scores = relationship("Score", back_populates="user", cascade="all, delete")
+
+
+class Score(Base):
+    __tablename__ = "scores"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    wod = Column(String(10), nullable=False)  # "24.1", "24.2", "24.3"
+    score = Column(String(20), nullable=False)  # Temps (hh:mm:ss) ou répétitions
+    created_at = Column(TIMESTAMP, server_default=func.now())
+
+    user = relationship("User", back_populates="scores")
 
 
 # Create tables in the database if not already present
