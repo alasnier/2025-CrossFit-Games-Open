@@ -13,7 +13,9 @@ st.title("Saisie des Scores des WODs")
 # Récupération de l'utilisateur dans la session
 user = st.session_state.get("user")  # Récupère l'objet utilisateur stocké
 if not user:
-    st.warning("Veuillez vous connecter pour enregistrer votre score.")
+    st.warning(
+        "Veuillez vous connecter pour enregistrer votre score => onglet Authentification (Barre Laterale Gauche)"
+    )
     st.stop()
 
 user_email = user["email"]
@@ -23,50 +25,46 @@ user = session.query(User).filter_by(email=user_email).first()
 if user:
     wod = st.selectbox("Sélectionner le WOD", ["24.1", "24.2", "24.3"])
 
-    # Initialiser la variable pour le score
-    score = None
+    # Vérifier si l'utilisateur a déjà enregistré un score
+    existing_score = session.query(Score).filter_by(user_id=user.id, wod=wod).first()
 
-    if wod in ["24.1", "24.3"]:
-        # Pour les WOD 24.1 et 24.3, on saisit un temps
-        score_input = st.text_input("Entrez votre score (format HH:MM:SS)", "")
+    if existing_score:
+        st.warning(f"Score actuel pour {wod} : {existing_score.score}")
+        modify = st.checkbox("Modifier votre score ?")
+    else:
+        modify = True
 
-        # Validation du format du temps
-        if score_input:
+    if modify:
+        new_score = None
+        if wod in ["24.1", "24.3"]:
+            score_input = st.text_input(
+                "Entrez votre score (format MM:SS)",
+                existing_score.score if existing_score else "",
+            )
             try:
-                score = datetime.strptime(
-                    score_input, "%H:%M:%S"
-                )  # Essayer de parser le temps
+                new_score = datetime.strptime(score_input, "%M:%S").strftime("%M:%S")
             except ValueError:
-                st.error(
-                    "Format de temps incorrect. Veuillez entrer au format HH:MM:SS."
-                )
-    elif wod == "24.2":
-        # Pour le WOD 24.2, on saisit le nombre de répétitions
-        score = st.number_input(
-            "Entrez votre nombre de répétitions", min_value=0, step=1
-        )
+                st.error("Format de temps incorrect. Utilisez MM:SS.")
+        elif wod == "24.2":
+            new_score = st.number_input(
+                "Entrez votre nombre de répétitions",
+                min_value=0,
+                step=1,
+                value=int(existing_score.score) if existing_score else 0,
+            )
 
-    # Vérification avant d'enregistrer le score
-    if st.button("Valider"):
-        if session.query(Score).filter_by(user_id=user.id, wod=wod).first():
-            st.error("Vous avez déjà enregistré un score pour ce WOD.")
-        else:
-            # Si le score est valide, on enregistre
-            if wod in ["24.1", "24.2"] and isinstance(score, datetime):
-                score_str = score.strftime(
-                    "%H:%M:%S"
-                )  # Sauvegarder en format chaîne HH:MM:SS
-            elif wod == "24.3" and isinstance(score, int) and score > 0:
-                score_str = str(score)  # Sauvegarder en tant que nombre de répétitions
-            else:
-                st.error("Veuillez entrer un score valide.")
-                st.stop()
-
-            # Enregistrement du score dans la base de données
-            new_score = Score(user_id=user.id, wod=wod, score=score_str)
-            session.add(new_score)
-            session.commit()
-            st.success("Score enregistré avec succès !")
-
+        if st.button("Enregistrer" if not existing_score else "Mettre à jour"):
+            if new_score:
+                if existing_score:
+                    existing_score.score = str(new_score)
+                else:
+                    new_score_entry = Score(
+                        user_id=user.id, wod=wod, score=str(new_score)
+                    )
+                    session.add(new_score_entry)
+                session.commit()
+                st.success("Score enregistré avec succès !")
 else:
-    st.warning("Veuillez vous connecter pour enregistrer votre score.")
+    st.warning(
+        "Veuillez vous connecter pour enregistrer votre score => onglet Authentification (Barre Laterale Gauche)"
+    )
