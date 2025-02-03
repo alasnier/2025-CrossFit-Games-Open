@@ -44,7 +44,7 @@ def calculer_classement(wod):
     total_athletes = len(ranked_athletes)
     classement = {}
     for i, (name, level, sex, score, score_type) in enumerate(ranked_athletes):
-        points = total_athletes - i
+        points = i + 1  # Le moins bon reçoit le plus de points
         classement[name] = points
 
     return classement, raw_scores
@@ -59,9 +59,7 @@ if wod_selected == "Classement Général":
             general_classement[name] = general_classement.get(name, 0) + points
             scores_details.setdefault(name, {}).update(wod_scores.get(name, {}))
 
-    sorted_general_classement = sorted(
-        general_classement.items(), key=lambda x: x[1], reverse=True
-    )
+    sorted_general_classement = sorted(general_classement.items(), key=lambda x: x[1])
 
     st.table(
         {
@@ -80,7 +78,7 @@ if wod_selected == "Classement Général":
     )
 else:
     classement, scores_details = calculer_classement(wod_selected)
-    sorted_classement = sorted(classement.items(), key=lambda x: x[1], reverse=True)
+    sorted_classement = sorted(classement.items(), key=lambda x: x[1])
 
     st.table(
         {
