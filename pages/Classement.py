@@ -7,63 +7,75 @@ session = Session()
 
 st.title("Classement des Athlètes")
 
-wod_selected = st.selectbox(
-    "Choisissez le WOD", ["24.1", "24.2", "24.3", "Classement Général"]
-)
+# Filtres
+sex_selected = st.selectbox("Sexe", ["Male", "Female"], index=0)
+level_selected = st.selectbox("Niveau", ["RX", "Scaled"], index=0)
+wod_selected = st.selectbox("Choisissez le WOD", ["Overall", "24.1", "24.2", "24.3"])
+
+
+# WODs triés par ordre croissant (temps)
+wods_time = ["24.1", "24.3"]  # Liste des WODs temps (exemple)
 
 
 # Fonction pour calculer les classements et récupérer les scores
-def calculer_classement(wod):
+def calculer_classement(wod, sex, level):
     scores = (
         session.query(User.name, User.level, User.sex, Score.score)
         .join(Score, User.id == Score.user_id)
-        .filter(Score.wod == wod)
+        .filter(Score.wod == wod, User.sex == sex, User.level == level)
         .all()
     )
 
     if not scores:
-        return [], {}
+        return {}, {}
 
-    score_data = []
+    classement = {}
     raw_scores = {}
     for name, level, sex, score in scores:
-        raw_scores.setdefault(name, {})[wod] = score
+        raw_scores.setdefault((name, level, sex), {})[wod] = score
         if ":" in score:  # Score au format temps (MM:SS)
             time_parts = list(map(int, score.split(":")))
             total_seconds = time_parts[0] * 60 + time_parts[1]
-            score_data.append((name, level, sex, total_seconds, "time"))
+            classement.setdefault((level, sex), []).append((name, total_seconds))
         else:  # Score basé sur les répétitions
-            score_data.append((name, level, sex, int(score), "reps"))
+            classement.setdefault((level, sex), []).append((name, int(score)))
 
-    finished = sorted([s for s in score_data if s[4] == "time"], key=lambda x: x[3])
-    not_finished = sorted(
-        [s for s in score_data if s[4] == "reps"], key=lambda x: x[3], reverse=True
-    )
-    ranked_athletes = finished + not_finished
-
-    total_athletes = len(ranked_athletes)
-    classement = {}
-    for i, (name, level, sex, score, score_type) in enumerate(ranked_athletes):
-        points = i + 1  # Le moins bon reçoit le plus de points
-        classement[name] = points
+    # Appliquer le tri en fonction du WOD
+    for key in classement:
+        classement[key] = sorted(
+            classement[key],
+            key=lambda x: x[1],
+            reverse=(
+                wod not in wods_time
+            ),  # Croissant pour les WODs temps, décroissant pour les répétitions
+        )
 
     return classement, raw_scores
 
 
-if wod_selected == "Classement Général":
+if wod_selected == "Overall":
     general_classement = {}
     scores_details = {}
     for wod in ["24.1", "24.2", "24.3"]:
-        wod_classement, wod_scores = calculer_classement(wod)
-        for name, points in wod_classement.items():
-            general_classement[name] = general_classement.get(name, 0) + points
-            scores_details.setdefault(name, {}).update(wod_scores.get(name, {}))
+        wod_classement, wod_scores = calculer_classement(
+            wod, sex_selected, level_selected
+        )
+        for (level, sex), athletes in wod_classement.items():
+            for i, (name, _) in enumerate(athletes):
+                general_classement.setdefault((name, level, sex), 0)
+                general_classement[(name, level, sex)] += i + 1  # Points cumulés
+                scores_details.setdefault((name, level, sex), {}).update(
+                    wod_scores.get((name, level, sex), {})
+                )
 
     sorted_general_classement = sorted(general_classement.items(), key=lambda x: x[1])
 
     st.table(
         {
-            "Nom": [c[0] for c in sorted_general_classement],
+            "Place": [i + 1 for i in range(len(sorted_general_classement))],
+            "Nom": [c[0][0] for c in sorted_general_classement],
+            "Niveau": [c[0][1] for c in sorted_general_classement],
+            "Sexe": [c[0][2] for c in sorted_general_classement],
             "24.1": [
                 scores_details[c[0]].get("24.1", "-") for c in sorted_general_classement
             ],
@@ -77,13 +89,21 @@ if wod_selected == "Classement Général":
         }
     )
 else:
-    classement, scores_details = calculer_classement(wod_selected)
-    sorted_classement = sorted(classement.items(), key=lambda x: x[1])
-
-    st.table(
-        {
-            "Nom": [c[0] for c in sorted_classement],
-            "Score": [scores_details[c[0]][wod_selected] for c in sorted_classement],
-            "Points": [c[1] for c in sorted_classement],
-        }
+    classement, scores_details = calculer_classement(
+        wod_selected, sex_selected, level_selected
     )
+
+    for (level, sex), athletes in classement.items():
+        st.subheader(f"Classement {level} - {sex}")
+        sorted_classement = [
+            (name, scores_details[(name, level, sex)][wod_selected])
+            for name, _ in athletes
+        ]
+        st.table(
+            {
+                "Place": [i + 1 for i in range(len(sorted_classement))],
+                "Nom": [c[0] for c in sorted_classement],
+                "Score": [c[1] for c in sorted_classement],
+                "Points": [i + 1 for i in range(len(sorted_classement))],
+            }
+        )
