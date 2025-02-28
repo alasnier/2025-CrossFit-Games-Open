@@ -10,11 +10,11 @@ st.title("Classement des Athlètes")
 # Filtres
 sex_selected = st.selectbox("Sexe", ["Male", "Female"], index=0)
 level_selected = st.selectbox("Niveau", ["RX", "Scaled"], index=0)
-wod_selected = st.selectbox("Choisissez le WOD", ["Overall", "24.1", "24.2", "24.3"])
+wod_selected = st.selectbox("Choisissez le WOD", ["Overall", "25.1", "25.2", "25.3"])
 
 
 # WODs triés par ordre croissant (temps)
-wods_time = ["24.1", "24.3"]  # Liste des WODs temps (exemple)
+wods_time = ["25.2", "25.3"]  # Liste des WODs temps (exemple)
 
 
 # Fonction pour calculer les classements et récupérer les scores
@@ -56,7 +56,7 @@ def calculer_classement(wod, sex, level):
 if wod_selected == "Overall":
     general_classement = {}
     scores_details = {}
-    for wod in ["24.1", "24.2", "24.3"]:
+    for wod in ["25.1", "25.2", "25.3"]:
         wod_classement, wod_scores = calculer_classement(
             wod, sex_selected, level_selected
         )
@@ -76,14 +76,14 @@ if wod_selected == "Overall":
             "Nom": [c[0][0] for c in sorted_general_classement],
             "Niveau": [c[0][1] for c in sorted_general_classement],
             "Sexe": [c[0][2] for c in sorted_general_classement],
-            "24.1": [
-                scores_details[c[0]].get("24.1", "-") for c in sorted_general_classement
+            "25.1": [
+                scores_details[c[0]].get("25.1", "-") for c in sorted_general_classement
             ],
-            "24.2": [
-                scores_details[c[0]].get("24.2", "-") for c in sorted_general_classement
+            "25.2": [
+                scores_details[c[0]].get("25.2", "-") for c in sorted_general_classement
             ],
-            "24.3": [
-                scores_details[c[0]].get("24.3", "-") for c in sorted_general_classement
+            "25.3": [
+                scores_details[c[0]].get("25.3", "-") for c in sorted_general_classement
             ],
             "Points Totaux": [c[1] for c in sorted_general_classement],
         }

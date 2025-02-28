@@ -38,8 +38,8 @@ def convert_to_seconds(time_str):
 
 
 # Définition des WODs temps et répétitions
-wods_time = ["24.1", "24.3"]
-wods_rep = ["24.2"]
+wods_time = ["25.2", "25.3"]
+wods_rep = ["25.1"]
 
 # Conversion des scores
 data["Score"] = data.apply(
@@ -50,7 +50,7 @@ data["Score"] = data.apply(
 )
 
 st.subheader("Statistiques par WOD")
-wod_selected = st.selectbox("Choisissez un WOD", ["24.1", "24.2", "24.3"], index=0)
+wod_selected = st.selectbox("Choisissez un WOD", ["25.1", "25.2", "25.3"], index=0)
 
 subset = data[data["WOD"] == wod_selected]
 if not subset.empty:
@@ -111,8 +111,8 @@ if not subset.empty:
         male_mean = male_scores.mean() if not male_scores.empty else 0
         female_mean = female_scores.mean() if not female_scores.empty else 0
 
-        st.write(f"Répétitions moyennes Hommes : {male_mean:.2f}")
-        st.write(f"Répétitions moyennes Femmes : {female_mean:.2f}")
+        st.write(f"Répétitions moyennes Hommes : {male_mean:.0f}")
+        st.write(f"Répétitions moyennes Femmes : {female_mean:.0f}")
 
     # Répartition des participants par sexe et niveau
     st.subheader("Répartition des Participants par Sexe et Niveau")
