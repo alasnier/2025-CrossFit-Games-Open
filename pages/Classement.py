@@ -9,7 +9,7 @@ st.title("Classement des Athlètes")
 
 # Filtres
 sex_selected = st.selectbox("Sexe", ["Male", "Female"], index=0)
-level_selected = st.selectbox("Niveau", ["RX", "Scaled"], index=0)
+level_selected = st.selectbox("Niveau", ["RX", "Scaled", "Coach"], index=0)
 wod_selected = st.selectbox("Choisissez le WOD", ["Overall", "25.1", "25.2", "25.3"])
 
 
