@@ -60,12 +60,12 @@ if not subset.empty:
     female_scores = subset[subset["Sexe"] == "Female"]["Score"].dropna()
 
     male_percentiles = (
-        np.percentile(male_scores, percentiles)
+        np.percentile(male_scores, 100 - percentiles)
         if not male_scores.empty
         else np.zeros_like(percentiles)
     )
     female_percentiles = (
-        np.percentile(female_scores, percentiles)
+        np.percentile(female_scores, 100 - percentiles)
         if not female_scores.empty
         else np.zeros_like(percentiles)
     )

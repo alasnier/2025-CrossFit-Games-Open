@@ -34,3 +34,32 @@ with last_co:
 st.markdown(
     "---"
 )  # ----------------------------------------------------------------------------------------------------
+
+left_co2, cent_co2, last_co2 = st.columns(3)
+with left_co2:
+    st.markdown(
+        "**25.2** (22.3 repeat) For time :",
+    )
+with cent_co2:
+    st.markdown("""
+21 pull-ups\n
+42 double-unders\n
+21 thrusters (weight 1)\n
+18 chest-to-bar pull-ups\n
+36 double-unders\n
+18 thrusters (weight 2)\n
+15 bar muscle-ups\n
+30 double-unders\n
+15 thrusters (weight 3) \n
+""")
+    st.markdown("")
+    st.markdown("**Time cap: 12 minutes**")
+with last_co2:
+    st.markdown("""
+♀️ 65, 75, 85 lb (29, 34, 38 kg)
+
+♂️ 95, 115, 135 lb (43, 52, 61 kg)""")
+
+st.markdown(
+    "---"
+)  # ----------------------------------------------------------------------------------------------------
