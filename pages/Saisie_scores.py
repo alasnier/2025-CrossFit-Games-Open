@@ -23,34 +23,48 @@ user = session.query(User).filter_by(email=user_email).first()
 
 wod_descriptions = {
     "25.1": """
-**25.1** AMRAP 15 minutes 
+**25.1** AMRAP 15 minutes \n
 3 lateral burpees over the dumbbell\n
 3 dumbbell hang clean-to-overheads\n
 30-foot walking lunge (2 x 15 feet)\n
 **After completing each round, add 3 reps to the burpees and hang clean-to-overheads.**\n
 ♀️ 35-lb (15-kg) dumbbell / ♂️ 50-lb (22.5-kg) dumbbell
-"""
+""",
+    "25.2": """
+**25.2** (22.3 repeat) For time :\n
+21 pull-ups\n
+42 double-unders\n
+21 thrusters (weight 1)\n
+18 chest-to-bar pull-ups\n
+36 double-unders\n
+18 thrusters (weight 2)\n
+15 bar muscle-ups\n
+30 double-unders\n
+15 thrusters (weight 3) \n
+**Time cap: 12 minutes**\n
+♀️ 65, 75, 85 lb (29, 34, 38 kg)  / ♂️ 95, 115, 135 lb (43, 52, 61 kg)
+""",
 }
 
 score_instructions = {
-    #     "25.2": """
-    # 🏋️ **Comment entrer votre score ?**
-    # - Si vous terminez avant la limite de temps (15 minutes), entrez votre temps sous le format **MM:SS**.
-    # - Si vous n’avez pas terminé avant le time cap :
-    #   - **Entrez "15:XX"**, où **XX = 1 seconde par répétition manquante**.
-    #   - Exemple : il vous restait 5 répétitions à faire → votre score est **15:05**.
-    # """,
+    "25.2": """
+    🏋️ **Comment entrer votre score ?**
+    - Si vous terminez avant la limite de temps (12 minutes), entrez votre temps sous le format **MM:SS**.
+    - Si vous n’avez pas terminé avant le time cap :
+      - **Entrez "12:XX"**, où **XX = 1 seconde par répétition manquante**.
+      - Exemple : il vous restait 5 répétitions à faire → votre score est **12:05**.
+    """,
     "25.1": """
 🔥 **Comment entrer votre score ?**  
 - Ce WOD est un **AMRAP de 15 minutes**.  
 - Entrez **le nombre total de répétitions effectuées** pendant les 20 minutes.
-"""
+""",
 }
 
 
 # Si l'utilisateur est trouvé, afficher les options de saisie
 if user:
-    wod = st.selectbox("Sélectionner le WOD", ["25.1", "25.2", "25.3"])
+    wod = st.selectbox("Sélectionner le WOD", ["25.2"])
     st.markdown(f"### WOD {wod}")
     st.markdown(wod_descriptions[wod])
     st.markdown("---")
@@ -68,7 +82,7 @@ if user:
 
     if modify:
         new_score = None
-        if wod in ["25.2", "25.3"]:
+        if wod in ["25.2"]:
             score_input = st.text_input(
                 "Entrez votre score (format MM:SS)",
                 existing_score.score if existing_score else "",
