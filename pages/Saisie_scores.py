@@ -44,15 +44,30 @@ wod_descriptions = {
 **Time cap: 12 minutes**\n
 ♀️ 65, 75, 85 lb (29, 34, 38 kg)  / ♂️ 95, 115, 135 lb (43, 52, 61 kg)
 """,
+    "25.3": """
+**25.3** For time :\n
+5 wall walks\n
+50-calorie row\n
+5 wall walks\n
+25 deadlifts\n
+5 wall walks\n
+25 cleans\n
+5 wall walks\n
+25 snatches\n
+5 wall walks\n
+50-calorie row\n
+**Time cap: 20 minutes**\n
+♀️ 155-lb (70-kg) deadlift, 85-lb (38-kg) clean, 65-lb (29-kg) snatch  / ♂️ 225-lb (102-kg) deadlift, 135-lb (61-kg) clean, 95-lb (43-kg) snatch
+""",
 }
 
 score_instructions = {
-    "25.2": """
+    "25.3": """
     🏋️ **Comment entrer votre score ?**
-    - Si vous terminez avant la limite de temps (12 minutes), entrez votre temps sous le format **MM:SS**.
+    - Si vous terminez avant la limite de temps (20 minutes), entrez votre temps sous le format **MM:SS**.
     - Si vous n’avez pas terminé avant le time cap :
-      - **Entrez "12:XX"**, où **XX = 1 seconde par répétition manquante**.
-      - Exemple : il vous restait 5 répétitions à faire → votre score est **12:05**.
+      - **Entrez "20:XX"**, où **XX = 1 seconde par répétition manquante**.
+      - Exemple : il vous restait 5 répétitions à faire → votre score est **20:05**.
     """,
     "25.1": """
 🔥 **Comment entrer votre score ?**  
@@ -64,7 +79,7 @@ score_instructions = {
 
 # Si l'utilisateur est trouvé, afficher les options de saisie
 if user:
-    wod = st.selectbox("Sélectionner le WOD", ["25.2"])
+    wod = st.selectbox("Sélectionner le WOD", ["25.3"])
     st.markdown(f"### WOD {wod}")
     st.markdown(wod_descriptions[wod])
     st.markdown("---")
@@ -82,7 +97,7 @@ if user:
 
     if modify:
         new_score = None
-        if wod in ["25.2"]:
+        if wod in ["25.3"]:
             score_input = st.text_input(
                 "Entrez votre score (format MM:SS)",
                 existing_score.score if existing_score else "",
