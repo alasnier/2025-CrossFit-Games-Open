@@ -63,3 +63,29 @@ with last_co2:
 st.markdown(
     "---"
 )  # ----------------------------------------------------------------------------------------------------
+
+left_co3, cent_co3, last_co3 = st.columns(3)
+with left_co3:
+    st.markdown(
+        "**25.3** For time :",
+    )
+with cent_co3:
+    st.markdown("""
+5 wall walks\n
+50-calorie row\n
+5 wall walks\n
+25 deadlifts\n
+5 wall walks\n
+25 cleans\n
+5 wall walks\n
+25 snatches\n
+5 wall walks\n
+50-calorie row\n
+""")
+    st.markdown("")
+    st.markdown("**Time cap: 20 minutes**")
+with last_co3:
+    st.markdown("""
+♀️ 155-lb (70-kg) deadlift, 85-lb (38-kg) clean, 65-lb (29-kg) snatch
+
+♂️ 225-lb (102-kg) deadlift, 135-lb (61-kg) clean, 95-lb (43-kg) snatch""")
